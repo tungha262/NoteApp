@@ -73,4 +73,6 @@ dependencies {
 
     // recyclerview
     implementation("androidx.recyclerview:recyclerview:1.4.0")
+
+    implementation("androidx.fragment:fragment-ktx:1.8.3")
 }
