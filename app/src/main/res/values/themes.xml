@@ -4,9 +4,13 @@
 
         <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryVariant">@color/red</item>
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+    <style name="Theme.NoteApp" parent="Base.Theme.NoteApp" />
+
+    <style name="ProgressBar">
+        <item name="colorSecondary">@color/red</item>
     </style>
 
-    <style name="Theme.NoteApp" parent="Base.Theme.NoteApp" />
 </resources>
