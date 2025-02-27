@@ -67,10 +67,13 @@
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_marginTop="30dp"
+            android:gravity="top"
+            android:paddingTop="10dp"
+            android:paddingStart="5dp"
             android:background="@drawable/custom_edt"
             android:fontFamily="@font/sans_regular"
             android:hint="@string/note_content"
-            android:padding="5dp" />
+             />
     </LinearLayout>
 
 

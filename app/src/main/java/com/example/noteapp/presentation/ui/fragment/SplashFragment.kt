@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.findNavController
 import com.example.noteapp.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +26,7 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.red)
+
         splashNavigateToHome()
     }
 
@@ -34,6 +35,8 @@ class SplashFragment : Fragment() {
             findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         }, 1500)
     }
+
+
 
 }
 

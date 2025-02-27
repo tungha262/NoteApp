@@ -9,6 +9,10 @@ import com.example.noteapp.data.model.Note
 import com.example.noteapp.domain.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,9 +21,19 @@ class NoteViewModel @Inject constructor(private var noteRepository: NoteReposito
 
     val allNotes = noteRepository.getAllNotes().asLiveData()
 
-    fun addNote(note: Note) {
+    private var _isCreatedNote =  MutableSharedFlow<Boolean>()
+    val isCreatedNote : SharedFlow<Boolean> = _isCreatedNote
+
+    suspend fun addNote(note: Note) {
+        if(note.title.isEmpty()){
+            _isCreatedNote.emit(false)
+            return
+
+        }
         viewModelScope.launch {
             noteRepository.addNote(note)
+            _isCreatedNote.emit(true)
+
         }
     }
 
@@ -44,5 +58,6 @@ class NoteViewModel @Inject constructor(private var noteRepository: NoteReposito
     fun searchNoteWithTitle(query: String): LiveData<List<Note>> {
         return noteRepository.searchNoteWithTitle(query).asLiveData()
     }
+
 
 }
