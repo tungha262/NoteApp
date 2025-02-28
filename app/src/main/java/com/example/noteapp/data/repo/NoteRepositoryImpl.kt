@@ -7,6 +7,14 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class NoteRepositoryImpl @Inject constructor(private val noteDao: NoteDao)  : NoteRepository {
+    override fun getNoteHighToLow(): Flow<List<Note>> {
+        return noteDao.getNoteHighToLow()
+    }
+
+    override fun getNoteLowToHigh(): Flow<List<Note>> {
+        return noteDao.getNoteLowToHigh()
+    }
+
     override fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes()
     }

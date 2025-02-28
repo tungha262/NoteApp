@@ -30,4 +30,10 @@ interface NoteDao {
     @Query("SELECT * FROM note_data WHERE title LIKE :query")
     fun searchNoteWithTitle(query : String) : Flow<List<Note>>
 
+    @Query("SELECT * FROM note_data ORDER BY priority ASC ")
+    fun getNoteHighToLow() : Flow<List<Note>>
+
+    @Query("SELECT * FROM note_data ORDER BY priority DESC ")
+    fun getNoteLowToHigh() : Flow<List<Note>>
+
 }

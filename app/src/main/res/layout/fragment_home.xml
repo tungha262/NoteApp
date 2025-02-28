@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:fontFamily="@font/sans_regular"
-            android:text="High To Low" />
+            android:text="@string/high_to_low" />
 
         <TextView
             android:padding="5dp"
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:fontFamily="@font/sans_regular"
-            android:text="Low To High" />
+            android:text="@string/low_to_high" />
 
     </LinearLayout>
 

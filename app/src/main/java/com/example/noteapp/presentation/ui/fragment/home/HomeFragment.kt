@@ -50,14 +50,52 @@ class HomeFragment : Fragment() {
         rcvListNotes.adapter = adapter
         rcvListNotes.layoutManager = GridLayoutManager(requireContext(), 2)
 
-        viewModel.allNotes.observe(viewLifecycleOwner, Observer { notes ->
-            adapter.setData(notes)
+        viewModel.filterState.observe(viewLifecycleOwner, Observer { state ->
+            when(state){
+                1 -> {
+                    binding.tvNoFilter.setBackgroundResource(R.drawable.custom_tv_filter_select)
+                    binding.tvFilterAsc.setBackgroundResource(R.drawable.custom_tv_filter)
+                    binding.tvFilterDesc.setBackgroundResource(R.drawable.custom_tv_filter)
+
+                    viewModel.allNotes.observe(viewLifecycleOwner, Observer { notes ->
+                        adapter.setData(notes)
+                    })
+                }
+                2 -> {
+                    binding.tvNoFilter.setBackgroundResource(R.drawable.custom_tv_filter)
+                    binding.tvFilterAsc.setBackgroundResource(R.drawable.custom_tv_filter)
+                    binding.tvFilterDesc.setBackgroundResource(R.drawable.custom_tv_filter_select)
+
+                    viewModel.allNotesHighToLow.observe(viewLifecycleOwner, Observer { notes ->
+                        adapter.setData(notes)
+                    })
+                }
+                3 -> {
+                    binding.tvNoFilter.setBackgroundResource(R.drawable.custom_tv_filter)
+                    binding.tvFilterAsc.setBackgroundResource(R.drawable.custom_tv_filter_select)
+                    binding.tvFilterDesc.setBackgroundResource(R.drawable.custom_tv_filter)
+
+                    viewModel.allNotesLowToHigh.observe(viewLifecycleOwner, Observer { notes ->
+                        adapter.setData(notes)
+                    })
+                }
+            }
         })
     }
 
     private fun initListener() {
         binding.floatBtnAddNoteHome.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_addNoteFragment)
+        }
+        binding.tvNoFilter.setOnClickListener {
+            viewModel.setStateFilter(1)
+        }
+        binding.tvFilterDesc.setOnClickListener {
+            viewModel.setStateFilter(2)
+
+        }
+        binding.tvFilterAsc.setOnClickListener {
+            viewModel.setStateFilter(3)
         }
     }
 

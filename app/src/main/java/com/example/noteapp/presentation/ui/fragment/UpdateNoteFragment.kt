@@ -77,6 +77,7 @@ class UpdateNoteFragment : Fragment() {
             }
         }
     }
+
     @SuppressLint("SimpleDateFormat")
     private fun initListener() {
         binding.floatBtnUpdateNote.setOnClickListener {

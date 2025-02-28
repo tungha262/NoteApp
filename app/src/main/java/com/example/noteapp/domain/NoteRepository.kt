@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.Flow
 interface NoteRepository {
     fun getAllNotes() : Flow<List<Note>>
 
+    fun getNoteHighToLow(): Flow<List<Note>>
+
+    fun getNoteLowToHigh(): Flow<List<Note>>
+
     suspend fun addNote(note: Note)
 
     suspend fun deleteNote(note: Note)

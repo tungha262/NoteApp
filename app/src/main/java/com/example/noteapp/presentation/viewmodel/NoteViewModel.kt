@@ -21,12 +21,18 @@ import javax.inject.Inject
 class NoteViewModel @Inject constructor(private var noteRepository: NoteRepository) : ViewModel() {
 
     val allNotes = noteRepository.getAllNotes().asLiveData()
+    val allNotesHighToLow = noteRepository.getNoteHighToLow().asLiveData()
+    val allNotesLowToHigh = noteRepository.getNoteLowToHigh().asLiveData()
+
 
     private var _isCreatedNote = MutableSharedFlow<Boolean>()
     val isCreatedNote: SharedFlow<Boolean> = _isCreatedNote
 
     private var _isUpdatedNote = MutableSharedFlow<Boolean>()
     val isUpdatedNote: SharedFlow<Boolean> = _isUpdatedNote
+
+    private var _filterState = MutableLiveData<Int>(1)
+    val filterState get() = _filterState
 
 
     suspend fun addNote(note: Note) {
@@ -70,6 +76,10 @@ class NoteViewModel @Inject constructor(private var noteRepository: NoteReposito
 
     private fun checkValid(note: Note): Boolean {
         return !TextUtils.isEmpty(note.title)
+    }
+
+    fun setStateFilter(state: Int){
+        _filterState.value = state
     }
 
 }
