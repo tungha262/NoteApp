@@ -12,4 +12,4 @@ data class Note(
     val content  :String,
     val date:String,
     val priority:String
-)
+)  :Serializable

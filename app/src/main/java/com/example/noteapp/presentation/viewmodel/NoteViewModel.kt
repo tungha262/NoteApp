@@ -1,5 +1,6 @@
 package com.example.noteapp.presentation.viewmodel
 
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,14 +22,17 @@ class NoteViewModel @Inject constructor(private var noteRepository: NoteReposito
 
     val allNotes = noteRepository.getAllNotes().asLiveData()
 
-    private var _isCreatedNote =  MutableSharedFlow<Boolean>()
-    val isCreatedNote : SharedFlow<Boolean> = _isCreatedNote
+    private var _isCreatedNote = MutableSharedFlow<Boolean>()
+    val isCreatedNote: SharedFlow<Boolean> = _isCreatedNote
+
+    private var _isUpdatedNote = MutableSharedFlow<Boolean>()
+    val isUpdatedNote: SharedFlow<Boolean> = _isUpdatedNote
+
 
     suspend fun addNote(note: Note) {
-        if(note.title.isEmpty()){
+        if (!checkValid(note)) {
             _isCreatedNote.emit(false)
             return
-
         }
         viewModelScope.launch {
             noteRepository.addNote(note)
@@ -37,21 +41,26 @@ class NoteViewModel @Inject constructor(private var noteRepository: NoteReposito
         }
     }
 
-    fun deleteNote(note: Note) {
+    suspend fun deleteNote(note: Note) {
         viewModelScope.launch {
             noteRepository.deleteNote(note)
         }
     }
 
-    fun deleteAllNotes() {
+    suspend fun deleteAllNotes() {
         viewModelScope.launch {
             noteRepository.deleteAllNotes()
         }
     }
 
-    fun updateNote(note: Note) {
+    suspend fun updateNote(note: Note) {
+        if(!checkValid(note)){
+            _isUpdatedNote.emit(false)
+            return
+        }
         viewModelScope.launch {
             noteRepository.updateNote(note)
+            _isUpdatedNote.emit(true)
         }
     }
 
@@ -59,5 +68,8 @@ class NoteViewModel @Inject constructor(private var noteRepository: NoteReposito
         return noteRepository.searchNoteWithTitle(query).asLiveData()
     }
 
+    private fun checkValid(note: Note): Boolean {
+        return !TextUtils.isEmpty(note.title)
+    }
 
 }

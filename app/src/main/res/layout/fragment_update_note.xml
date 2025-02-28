@@ -42,7 +42,6 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/ic_done"
                 android:background="@drawable/green_dot" />
 
             <ImageView
@@ -69,13 +68,15 @@
             android:layout_marginTop="30dp"
             android:background="@drawable/custom_edt"
             android:fontFamily="@font/sans_regular"
+            android:gravity="top"
             android:hint="@string/note_content"
-            android:padding="5dp" />
+            android:paddingStart="5dp"
+            android:paddingTop="10dp" />
     </LinearLayout>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/float_btn_add_note"
+        android:id="@+id/float_btn_update_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

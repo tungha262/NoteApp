@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteapp.R
 import com.example.noteapp.data.model.Note
@@ -25,6 +28,7 @@ class HomeNoteAdapter : RecyclerView.Adapter<HomeNoteAdapter.HomeViewHolder>() {
         val tvContent: TextView = item.findViewById(R.id.tv_note_add_content)
         val tvDate: TextView = item.findViewById(R.id.tv_note_add_date)
         val imgPriority: ImageView = item.findViewById(R.id.img_note_add_priority)
+        val rowItem : CardView = item.findViewById(R.id.note_item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
@@ -55,6 +59,10 @@ class HomeNoteAdapter : RecyclerView.Adapter<HomeNoteAdapter.HomeViewHolder>() {
                     imgPriority.setImageResource(R.drawable.green_dot)
                 }
             }
+        }
+        holder.rowItem.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToUpdateNoteFragment(note)
+            it.findNavController().navigate(action)
         }
     }
 }
