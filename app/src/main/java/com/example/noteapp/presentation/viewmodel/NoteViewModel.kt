@@ -31,6 +31,7 @@ class NoteViewModel @Inject constructor(private var noteRepository: NoteReposito
     private var _isUpdatedNote = MutableSharedFlow<Boolean>()
     val isUpdatedNote: SharedFlow<Boolean> = _isUpdatedNote
 
+
     private var _filterState = MutableLiveData<Int>(1)
     val filterState get() = _filterState
 

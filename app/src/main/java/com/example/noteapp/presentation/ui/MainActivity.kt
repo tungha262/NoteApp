@@ -13,19 +13,27 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.noteapp.R
 import com.example.noteapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var toolbar : Toolbar
+
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         WindowCompat.setDecorFitsSystemWindows(window, true)
         window.statusBarColor = ContextCompat.getColor(this, R.color.red)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -40,7 +48,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpToolBar(){
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
+
+        //action bar
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment))
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        //hide toolbar in splash
         navController.addOnDestinationChangedListener(object : NavController.OnDestinationChangedListener{
             override fun onDestinationChanged(
                 controller: NavController,
@@ -55,5 +69,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

@@ -4,10 +4,16 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -59,6 +65,8 @@ class UpdateNoteFragment : Fragment() {
     }
 
     private fun initUi() {
+        addMenu()
+
         val note = arg.note
         priorityUpdate = note.priority
         binding.edtNoteTitle.setText(note.title)
@@ -76,6 +84,41 @@ class UpdateNoteFragment : Fragment() {
                 binding.imgPriorityGreen.setImageResource(R.drawable.ic_done)
             }
         }
+    }
+
+    private fun addMenu() {
+        requireActivity().addMenuProvider(object :MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.my_menu, menu)
+
+                val actionSearch = menu.findItem(R.id.action_search)
+                actionSearch.isVisible = false
+
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if(menuItem.itemId == R.id.action_delete){
+                    deleteNote()
+                    return true
+                }
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun deleteNote() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete all notes")
+            .setMessage("Do you want to delete all notes?")
+            .setPositiveButton("Yes") { _, _ ->
+                lifecycleScope.launch {
+                    viewModel.deleteNote(arg.note)
+                }
+                Toast.makeText(requireContext(), "Note deleted successfully", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_updateNoteFragment_to_homeFragment)
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 
     @SuppressLint("SimpleDateFormat")

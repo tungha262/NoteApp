@@ -11,4 +11,5 @@
     <string name="note_date">Date</string>
     <string name="high_to_low">High To Low</string>
     <string name="low_to_high">Low To High</string>
+    <string name="empty_notes">Empty Notes</string>
 </resources>
