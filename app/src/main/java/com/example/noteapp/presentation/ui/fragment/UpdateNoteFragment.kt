@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import com.example.noteapp.data.model.Note
+import com.example.noteapp.domain.state.EditNoteState
 import com.example.noteapp.presentation.viewmodel.NoteViewModel
 import kotlinx.coroutines.launch
 
@@ -48,21 +49,23 @@ class UpdateNoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUi()
         initListener()
+
         lifecycleScope.launch {
-            viewModel.isUpdatedNote.collect { update ->
-                if (update) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Note updated successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(requireContext(), "Title can't be empty", Toast.LENGTH_SHORT)
-                        .show()
+            viewModel.isUpdatedNote.collect { result ->
+                when(result){
+                    is EditNoteState.Error -> {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                    is EditNoteState.Success -> {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
+
+
     }
+
 
     private fun initUi() {
         addMenu()
@@ -86,6 +89,7 @@ class UpdateNoteFragment : Fragment() {
         }
     }
 
+
     private fun addMenu() {
         requireActivity().addMenuProvider(object :MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -106,6 +110,7 @@ class UpdateNoteFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+
     private fun deleteNote() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete all notes")
@@ -120,6 +125,8 @@ class UpdateNoteFragment : Fragment() {
             .setNegativeButton("No", null)
             .show()
     }
+
+
 
     @SuppressLint("SimpleDateFormat")
     private fun initListener() {
@@ -139,7 +146,6 @@ class UpdateNoteFragment : Fragment() {
             binding.edtNoteTitle.clearFocus()
             binding.edtNoteContent.clearFocus()
         }
-
 
         binding.imgPriorityGreen.setOnClickListener {
             binding.imgPriorityGreen.setImageResource(R.drawable.ic_done)

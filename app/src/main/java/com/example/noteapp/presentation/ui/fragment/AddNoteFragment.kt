@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.noteapp.R
 import com.example.noteapp.data.model.Note
 import com.example.noteapp.databinding.FragmentAddNoteBinding
+import com.example.noteapp.domain.state.EditNoteState
 import com.example.noteapp.presentation.viewmodel.NoteViewModel
 import com.example.noteapp.util.Const
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,17 +43,19 @@ class AddNoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initListener()
         lifecycleScope.launch {
-            viewModel.isCreatedNote.collect { isCreated ->
-                if(isCreated){
-                    Toast.makeText(requireContext(), "Note created successfully", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_addNoteFragment_to_homeFragment)
-                }else{
-                    Toast.makeText(requireContext(), "Title can't be empty", Toast.LENGTH_SHORT).show()
+            viewModel.isCreatedNote.collect { result ->
+                when(result){
+                    is EditNoteState.Error -> {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                    is EditNoteState.Success -> {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.action_addNoteFragment_to_homeFragment)
+                    }
                 }
             }
         }
     }
-
     private fun initListener() {
         binding.floatBtnAddNote.setOnClickListener {
             tvTitle = binding.edtNoteTitle.text.toString()

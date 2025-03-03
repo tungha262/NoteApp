@@ -1,8 +1,5 @@
-package com.example.noteapp.domain
+package com.example.noteapp.domain.repo
 
-import androidx.room.Delete
-import androidx.room.Query
-import androidx.room.Update
 import com.example.noteapp.data.model.Note
 import kotlinx.coroutines.flow.Flow
 

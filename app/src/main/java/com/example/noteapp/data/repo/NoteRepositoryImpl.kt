@@ -2,7 +2,7 @@ package com.example.noteapp.data.repo
 
 import com.example.noteapp.data.model.Note
 import com.example.noteapp.data.room.NoteDao
-import com.example.noteapp.domain.NoteRepository
+import com.example.noteapp.domain.repo.NoteRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

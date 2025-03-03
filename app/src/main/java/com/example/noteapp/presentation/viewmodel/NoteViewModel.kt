@@ -7,79 +7,80 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.noteapp.data.model.Note
-import com.example.noteapp.domain.NoteRepository
+import com.example.noteapp.domain.repo.NoteRepository
+import com.example.noteapp.domain.state.EditNoteState
+import com.example.noteapp.domain.usecase.AddNoteUC
+import com.example.noteapp.domain.usecase.DeleteAllNotesUC
+import com.example.noteapp.domain.usecase.DeleteNoteUC
+import com.example.noteapp.domain.usecase.GetAllNotesUC
+import com.example.noteapp.domain.usecase.GetNoteHighToLowUC
+import com.example.noteapp.domain.usecase.GetNoteLowToHighUC
+import com.example.noteapp.domain.usecase.SearchNoteWithTitleUC
+import com.example.noteapp.domain.usecase.UpdateNoteUC
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteViewModel @Inject constructor(private var noteRepository: NoteRepository) : ViewModel() {
+class NoteViewModel @Inject constructor(
+    private var addNoteUC: AddNoteUC,
+    private var deleteNoteUC: DeleteNoteUC,
+    private var deleteAllNotesUC: DeleteAllNotesUC,
+    private var getAllNotesUC: GetAllNotesUC,
+    private var getNoteHighToLowUC: GetNoteHighToLowUC,
+    private var getNoteLowToHighUC: GetNoteLowToHighUC,
+    private var searchNoteWithTitleUC: SearchNoteWithTitleUC,
+    private var updateNoteUC: UpdateNoteUC,
+) : ViewModel() {
 
-    val allNotes = noteRepository.getAllNotes().asLiveData()
-    val allNotesHighToLow = noteRepository.getNoteHighToLow().asLiveData()
-    val allNotesLowToHigh = noteRepository.getNoteLowToHigh().asLiveData()
+    val allNotes = getAllNotesUC().asLiveData()
+    val allNotesHighToLow = getNoteHighToLowUC().asLiveData()
+    val allNotesLowToHigh = getNoteLowToHighUC().asLiveData()
+
+    private var _isCreatedNote = MutableSharedFlow<EditNoteState>()
+    val isCreatedNote: SharedFlow<EditNoteState> = _isCreatedNote
+
+    private var _isUpdatedNote = MutableSharedFlow<EditNoteState>()
+    val isUpdatedNote: SharedFlow<EditNoteState> = _isUpdatedNote
 
 
-    private var _isCreatedNote = MutableSharedFlow<Boolean>()
-    val isCreatedNote: SharedFlow<Boolean> = _isCreatedNote
-
-    private var _isUpdatedNote = MutableSharedFlow<Boolean>()
-    val isUpdatedNote: SharedFlow<Boolean> = _isUpdatedNote
-
-
-    private var _filterState = MutableLiveData<Int>(1)
+    private var _filterState = MutableLiveData(1)
     val filterState get() = _filterState
 
 
-    suspend fun addNote(note: Note) {
-        if (!checkValid(note)) {
-            _isCreatedNote.emit(false)
-            return
-        }
+    fun addNote(note: Note) {
         viewModelScope.launch {
-            noteRepository.addNote(note)
-            _isCreatedNote.emit(true)
-
+            val result = addNoteUC(note)
+            _isCreatedNote.emit(result)
         }
     }
 
-    suspend fun deleteNote(note: Note) {
+    fun deleteNote(note: Note) {
         viewModelScope.launch {
-            noteRepository.deleteNote(note)
+            deleteNoteUC(note)
         }
     }
 
-    suspend fun deleteAllNotes() {
+    fun deleteAllNotes() {
         viewModelScope.launch {
-            noteRepository.deleteAllNotes()
+            deleteAllNotesUC()
         }
     }
 
-    suspend fun updateNote(note: Note) {
-        if(!checkValid(note)){
-            _isUpdatedNote.emit(false)
-            return
-        }
+    fun updateNote(note: Note) {
         viewModelScope.launch {
-            noteRepository.updateNote(note)
-            _isUpdatedNote.emit(true)
+            val result = updateNoteUC(note)
+            _isUpdatedNote.emit(result)
         }
     }
 
     fun searchNoteWithTitle(query: String): LiveData<List<Note>> {
-        return noteRepository.searchNoteWithTitle(query).asLiveData()
+        return searchNoteWithTitleUC(query).asLiveData()
     }
 
-    private fun checkValid(note: Note): Boolean {
-        return !TextUtils.isEmpty(note.title)
-    }
-
-    fun setStateFilter(state: Int){
+    fun setStateFilter(state: Int) {
         _filterState.value = state
     }
 

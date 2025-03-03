@@ -2,7 +2,7 @@ package com.example.noteapp.di
 
 import com.example.noteapp.data.repo.NoteRepositoryImpl
 import com.example.noteapp.data.room.NoteDao
-import com.example.noteapp.domain.NoteRepository
+import com.example.noteapp.domain.repo.NoteRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideNoteRepository(noteDao: NoteDao) : NoteRepository{
+    fun provideNoteRepository(noteDao: NoteDao) : NoteRepository {
         return NoteRepositoryImpl(noteDao)
     }
 
